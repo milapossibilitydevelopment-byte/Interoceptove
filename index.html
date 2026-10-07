@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ride the Wave</title>
+<meta name="description" content="Interoceptive exposure practice: one-minute exercises that bring on body sensations, with ratings and a practice log.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#13294B; --ink-soft:#43597A; --paper:#F5F8FA; --surface:#FFFFFF;
+  --sea:#1F6F6B; --sea-glass:#CFE6E3; --sun:#F2C14E; --sun-ink:#5A4300;
+  --line:#D6E0E8; --warn:#B4442E; --warn-bg:#FBE9E4;
+  --radius-lg:22px; --radius-sm:10px;
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#E6EEF6; --ink-soft:#A9BACD; --paper:#0E1A2B; --surface:#152439;
+    --sea:#5FC2B9; --sea-glass:#1C3A45; --sun:#F2C14E; --sun-ink:#2A2000;
+    --line:#26384F; --warn:#FF9B85; --warn-bg:#3A1F1A;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#E6EEF6; --ink-soft:#A9BACD; --paper:#0E1A2B; --surface:#152439;
+  --sea:#5FC2B9; --sea-glass:#1C3A45; --sun:#F2C14E; --sun-ink:#2A2000;
+  --line:#26384F; --warn:#FF9B85; --warn-bg:#3A1F1A;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:1.0625rem/1.6 var(--body)}
+a{color:var(--sea)}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px;border-radius:4px}
+.wrap{max-width:46rem;margin:0 auto;padding:0 16px}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0}
+h2{font-size:clamp(1.6rem,4vw,2.1rem);font-weight:800;margin:0 0 .5rem}
+h3{font-size:1.2rem;font-weight:700}
+p{margin:.6rem 0}
+.muted{color:var(--ink-soft)}
+section{padding:2.5rem 0;border-top:1px solid var(--line)}
+
+/* hero */
+.hero{padding-top:4.5rem;padding-bottom:2.5rem;border:0;position:relative;overflow:hidden}
+.hero h1{font-size:clamp(2.6rem,9vw,4.6rem);font-weight:800;letter-spacing:-.02em;max-width:12ch}
+.hero p{font-size:1.15rem;max-width:36rem}
+.hero-wave{display:block;width:100%;height:70px;margin-top:1.5rem;color:var(--sea)}
+
+/* steps */
+.steps{list-style:none;padding:0;margin:1rem 0 0;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:2.4rem 1fr;gap:.75rem;padding:.6rem 0}
+.steps li::before{content:counter(s);font:800 1.4rem/1 var(--display);color:var(--sea);padding-top:.15rem}
+.why{display:grid;gap:.4rem;margin:1rem 0 0;padding:0;list-style:none}
+.why li{padding-left:1.1rem;position:relative}
+.why li::before{content:"";position:absolute;left:0;top:.65em;width:.45rem;height:.45rem;border-radius:50%;background:var(--sea)}
+
+/* safety */
+.check{display:flex;gap:.6rem;align-items:flex-start;padding:.45rem 0;cursor:pointer}
+.check input{width:1.2rem;height:1.2rem;margin-top:.2rem;accent-color:var(--sea);flex:none}
+.note{background:var(--warn-bg);color:var(--ink);border-left:4px solid var(--warn);padding:.8rem 1rem;border-radius:var(--radius-sm);margin-top:1rem}
+.note[hidden]{display:none}
+
+/* exercise list */
+.group{margin-top:2rem}
+.group-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.group-head p{margin:0}
+.ex{display:grid;grid-template-columns:1fr auto;gap:.4rem 1rem;align-items:center;padding:1rem 0;border-bottom:1px solid var(--line)}
+.ex:last-child{border-bottom:0}
+.ex h4{margin:0;font:700 1.05rem/1.3 var(--body)}
+.ex .how{margin:.2rem 0 0;color:var(--ink-soft);font-size:.98rem}
+.ex .flag{display:inline-block;margin-top:.35rem;font-size:.85rem;color:var(--warn);font-weight:700}
+.ex .flag[hidden]{display:none}
+.ex .done{font-size:.85rem;color:var(--sea);font-weight:700;margin-left:.4rem}
+.btn{font:700 1rem/1 var(--body);border:2px solid var(--sea);background:transparent;color:var(--sea);padding:.7rem 1.1rem;border-radius:999px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--sea-glass)}
+.btn.primary{background:var(--sea);color:var(--paper)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.sun{background:var(--sun);border-color:var(--sun);color:var(--sun-ink)}
+.btn.ghost{border-color:var(--line);color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+
+/* custom */
+.custom{display:grid;gap:.6rem;margin-top:1rem}
+input[type=text],textarea{width:100%;font:inherit;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius-sm);padding:.6rem .75rem}
+textarea{min-height:4.5rem;resize:vertical}
+label.lbl{display:block;font-weight:700;margin:1rem 0 .3rem}
+
+/* log */
+.table-wrap{overflow-x:auto;margin-top:1rem;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:700;background:var(--sea-glass)}
+td.num,th.num{text-align:center;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.empty{padding:1.2rem;color:var(--ink-soft)}
+.plan{list-style:none;padding:0;margin:1rem 0 0;counter-reset:p}
+.plan li{counter-increment:p;display:grid;grid-template-columns:2rem 1fr auto;gap:.6rem;padding:.55rem 0;border-bottom:1px solid var(--line);align-items:baseline}
+.plan li::before{content:counter(p);font:800 1.1rem var(--display);color:var(--sea)}
+.plan .meta{color:var(--ink-soft);font-size:.9rem;white-space:nowrap}
+
+/* dialog */
+dialog{border:0;padding:0;width:min(40rem,100vw);max-height:100dvh;border-radius:var(--radius-lg);background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:rgba(10,20,35,.6)}
+@media (max-width:600px){dialog{border-radius:0;width:100vw;height:100dvh;max-width:100vw;margin:0}}
+.dlg{padding:1.5rem 1.25rem 1.25rem;display:flex;flex-direction:column;min-height:100%}
+.dlg-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+.dlg-top h3{font-size:1.5rem}
+.x{border:0;background:transparent;color:var(--ink-soft);font-size:1.6rem;line-height:1;cursor:pointer;padding:.2rem .4rem}
+.stage[hidden]{display:none}
+.scale{margin:.4rem 0 .2rem}
+.scale-row{display:grid;grid-template-columns:repeat(11,1fr);gap:4px}
+.scale-row button{font:700 .95rem var(--body);padding:.55rem 0;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;cursor:pointer}
+.scale-row button[aria-pressed="true"]{background:var(--sea);border-color:var(--sea);color:var(--paper)}
+.scale-ends{display:flex;justify-content:space-between;font-size:.82rem;color:var(--ink-soft);margin-top:.2rem}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.4rem}
+.chips button{font:inherit;font-size:.92rem;padding:.4rem .75rem;border-radius:999px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--sea-glass);border-color:var(--sea);font-weight:700}
+.dlg-actions{display:flex;gap:.6rem;justify-content:flex-end;flex-wrap:wrap;margin-top:1.5rem}
+
+/* the wave timer */
+.tank{position:relative;height:min(52vh,22rem);margin:1rem 0 .5rem;border-radius:var(--radius-lg);overflow:hidden;background:var(--sea-glass)}
+.water{position:absolute;left:0;right:0;bottom:0;height:100%;transform:translateY(100%);transition:transform 1s linear;color:var(--sea)}
+.water svg{position:absolute;left:0;top:-28px;width:200%;height:30px;animation:slosh 3.2s linear infinite}
+.water .body{position:absolute;inset:0;background:currentColor}
+@keyframes slosh{to{transform:translateX(-50%)}}
+.count{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;text-align:center;padding:1rem}
+.count .secs{font:800 clamp(4rem,18vw,7rem)/1 var(--display);letter-spacing:-.03em;color:var(--ink);mix-blend-mode:normal;text-shadow:0 0 18px var(--surface)}
+.count .cue{font-size:1.1rem;font-weight:700;max-width:24rem;text-shadow:0 0 12px var(--surface)}
+.tank.full .count .secs,.tank.full .count .cue{color:var(--paper);text-shadow:none}
+canvas.spiral{position:absolute;inset:0;width:100%;height:100%;z-index:1;opacity:.9}
+.reading{background:var(--paper);border-radius:var(--radius-sm);padding:1rem;margin-top:1rem}
+@media (prefers-reduced-motion:reduce){.water svg{animation:none}.water{transition:none}}
+
+.foot{padding-top:2rem;padding-bottom:3rem;color:var(--ink-soft);font-size:.9rem}
+.theme{position:absolute;top:1rem;right:16px}
+@media print{
+  .hero-wave,.btn,.theme,#exercises,#safety,#how,.custom,dialog{display:none!important}
+  body{background:#fff;color:#000}
+  section{border:0;padding:1rem 0}
+  .table-wrap{border:1px solid #999}
+  #print-head{display:block!important}
+}
+#print-head{display:none}
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <button class="btn ghost theme" id="themeBtn" type="button" aria-label="Switch light or dark mode">Dark mode</button>
+  <h1>Ride the wave</h1>
+  <p>Short exercises that bring on the body feelings anxiety can cause, like a racing heart, dizziness or a tight throat. You do each one for one minute and notice what happens. Over time your brain learns these feelings are uncomfortable, not dangerous.</p>
+  <svg class="hero-wave" viewBox="0 0 600 70" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 45 C 60 10, 120 10, 180 40 S 300 70, 360 35 S 480 5, 540 30 S 590 50, 600 45" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+  </svg>
+</header>
+
+<main>
+<section id="how" class="wrap">
+  <h2>How it works</h2>
+  <p>Panic and anxiety are fueled by three things: scary thoughts about body sensations, a body that has learned to pair those sensations with fear, and avoiding the sensations or the places they show up. These exercises work on all three.</p>
+  <ol class="steps">
+    <li><div><strong>Predict.</strong> Before you start, write what your mind says will happen and rate your anxiety from 0 to 10.</div></li>
+    <li><div><strong>Do it for one full minute.</strong> Make the sensations as strong as you can. No distractions, no water sips, no sitting down early.</div></li>
+    <li><div><strong>Notice and rate.</strong> Pick the sensations you felt, how strong they were, and how much they felt like your real anxiety or panic.</div></li>
+    <li><div><strong>Check your prediction.</strong> Write what actually happened. That gap is the new learning.</div></li>
+    <li><div><strong>Repeat.</strong> Practice the exercises that feel most like your anxiety until your fear drops by about half, then practice them in places you have been avoiding.</div></li>
+  </ol>
+  <ul class="why">
+    <li>The sensations themselves are not the problem. The fear of them is.</li>
+    <li>Feeling uncomfortable during practice means it is working.</li>
+    <li>You can stop at any time. Try to stay with it anyway.</li>
+  </ul>
+</section>
+
+<section id="safety" class="wrap">
+  <h2>Safety check</h2>
+  <p>Do these exercises with your therapist first. Tick anything that applies so the page can flag exercises to check before trying.</p>
+  <div id="screen">
+    <label class="check"><input type="checkbox" value="breath"> Asthma or another breathing or lung condition</label>
+    <label class="check"><input type="checkbox" value="heart"> A heart condition or high blood pressure</label>
+    <label class="check"><input type="checkbox" value="seizure"> Seizures or epilepsy</label>
+    <label class="check"><input type="checkbox" value="neck"> Neck, back or inner-ear (balance) problems, or a recent concussion</label>
+    <label class="check"><input type="checkbox" value="preg"> Pregnancy</label>
+  </div>
+  <p class="note" id="screenNote" hidden>Some exercises are now marked "Check with your therapist first." Ask before trying those, and ask your doctor if you are unsure.</p>
+</section>
+
+<section id="exercises" class="wrap">
+  <h2>Exercises</h2>
+  <p class="muted">Every exercise runs for one minute. Try them all once to find which feel most like your anxiety.</p>
+  <div id="groups"></div>
+
+  <div class="group">
+    <h3>Add your own</h3>
+    <p class="muted">Your therapist may give you an exercise made for you.</p>
+    <div class="custom">
+      <input type="text" id="customName" placeholder="Name, for example: wear a snug scarf" aria-label="Your exercise name">
+      <input type="text" id="customHow" placeholder="How to do it (optional)" aria-label="How to do your exercise">
+      <div><button class="btn" type="button" id="customStart">Start 1 minute</button></div>
+    </div>
+  </div>
+</section>
+
+<section id="log" class="wrap">
+  <div id="print-head"><h2>Interoceptive exposure practice</h2><p id="printMeta"></p></div>
+  <h2>Your practice list</h2>
+  <p class="muted">Exercises that felt like your anxiety (similarity 3 or more), from easiest to hardest. Practice these every day, starting at the top.</p>
+  <ol class="plan" id="plan"></ol>
+  <p class="empty" id="planEmpty">Finish a few exercises and your list will build here.</p>
+
+  <h3 style="margin-top:2rem">All practice</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>When</th><th>Exercise</th><th class="num">Before</th><th class="num">Peak</th><th class="num">After</th><th class="num">Similar</th><th>Felt</th><th>Predicted / happened</th></tr></thead>
+      <tbody id="logBody"></tbody>
+    </table>
+    <p class="empty" id="logEmpty">No practice yet. Pick an exercise above to start.</p>
+  </div>
+  <div class="row" style="margin-top:1rem">
+    <input type="text" id="clientName" placeholder="Name or initials for the printout" aria-label="Name or initials" style="max-width:18rem">
+    <button class="btn" type="button" id="printBtn">Print or save as PDF</button>
+    <button class="btn" type="button" id="csvBtn">Download spreadsheet (CSV)</button>
+    <button class="btn ghost" type="button" id="clearBtn">Clear practice</button>
+  </div>
+  <p class="muted" style="font-size:.9rem">Your ratings stay on this device only. Nothing is sent anywhere.</p>
+</section>
+</main>
+
+<footer class="foot wrap">
+  <p>Ratings use 0 = none and 10 = your worst. Adapted from Barlow (2002), <em>Anxiety and Its Disorders</em>; Craske &amp; Barlow, <em>Mastery of Your Anxiety and Panic</em>; and Pincus et al., <em>Mastery of Anxiety and Panic for Adolescents: Riding the Wave</em>. For use with a licensed clinician. Not a substitute for treatment.</p>
+</footer>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <div class="dlg">
+    <div class="dlg-top">
+      <div><h3 id="dlgTitle"></h3><p class="muted" id="dlgHow" style="margin:.3rem 0 0"></p></div>
+      <button class="x" type="button" id="dlgClose" aria-label="Close">×</button>
+    </div>
+
+    <div class="stage" id="stBefore">
+      <label class="lbl" for="predict">What does your mind say will happen?</label>
+      <textarea id="predict" placeholder="For example: I'll faint, I won't be able to breathe, I'll lose control"></textarea>
+      <div class="lbl" id="beforeLbl">How anxious are you right now?</div>
+      <div class="scale" data-key="before" aria-labelledby="beforeLbl"></div>
+      <div class="dlg-actions"><button class="btn primary" type="button" id="goBtn">Start the minute</button></div>
+    </div>
+
+    <div class="stage" id="stRun" hidden>
+      <div class="tank" id="tank">
+        <canvas class="spiral" id="spiral" hidden></canvas>
+        <div class="water" id="water" aria-hidden="true">
+          <svg viewBox="0 0 1200 30" preserveAspectRatio="none"><path d="M0 15 Q 75 0 150 15 T 300 15 T 450 15 T 600 15 T 750 15 T 900 15 T 1050 15 T 1200 15 V30 H0Z" fill="currentColor"/></svg>
+          <div class="body"></div>
+        </div>
+        <div class="count"><div class="secs" id="secs" aria-live="off">60</div><div class="cue" id="cue" aria-live="polite"></div></div>
+      </div>
+      <div class="dlg-actions">
+        <button class="btn ghost" type="button" id="heartBtn" hidden>Turn heartbeat sound on</button>
+        <button class="btn ghost" type="button" id="pauseBtn">Pause</button>
+        <button class="btn" type="button" id="stopBtn">Stop early</button>
+      </div>
+    </div>
+
+    <div class="stage" id="stAfter" hidden>
+      <p id="afterMsg" style="font-weight:700"></p>
+      <div class="reading" id="reading" hidden>
+        <strong>Now read this out loud:</strong>
+        <p>The ocean is never still. Waves rise, reach their highest point, and then fall back. A wave can look huge from the shore, but every single one comes back down. Feelings in the body work the same way.</p>
+      </div>
+      <div class="lbl">What did you feel? Pick all that fit.</div>
+      <div class="chips" id="chips"></div>
+      <div class="lbl" id="intLbl">How strong were the sensations?</div>
+      <div class="scale" data-key="intensity" aria-labelledby="intLbl"></div>
+      <div class="lbl" id="peakLbl">Highest anxiety during the minute</div>
+      <div class="scale" data-key="peak" aria-labelledby="peakLbl"></div>
+      <div class="lbl" id="afterLbl">Anxiety right now</div>
+      <div class="scale" data-key="after" aria-labelledby="afterLbl"></div>
+      <div class="lbl" id="simLbl">How much did it feel like your real anxiety or panic?</div>
+      <div class="scale" data-key="similar" aria-labelledby="simLbl" data-ends="Not at all|Exactly the same"></div>
+      <label class="lbl" for="happened">What actually happened?</label>
+      <textarea id="happened" placeholder="For example: I felt dizzy, but I didn't faint and it faded in about a minute"></textarea>
+      <div class="dlg-actions">
+        <button class="btn ghost" type="button" id="againBtn">Save and do it again</button>
+        <button class="btn primary" type="button" id="saveBtn">Save</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(function(){
+"use strict";
+var SENS=["Racing heart","Short of breath","Dizzy","Lightheaded","Tight throat","Choking or gagging","Tingling","Shaky","Sweaty or hot","Nausea","Unreal or far away","Blurry vision","Chest tight","Heavy or weak"];
+
+var GROUPS=[
+ {name:"Heart and breathing",about:"Racing heart, pounding, short of breath",items:[
+  {id:"run",name:"Run in place",how:"Lift your knees high, or do jumping jacks.",flags:["heart","preg"]},
+  {id:"push",name:"Push-ups",how:"Regular or on your knees, as many as you can.",flags:["heart"]},
+  {id:"arms",name:"Hold your arms out",how:"Hold both arms straight out to the side. Add a water bottle in each hand to make it harder.",flags:[]},
+  {id:"over",name:"Overbreathe",how:"Breathe fast, deep and hard through your mouth, about one breath every second.",flags:["breath","heart","seizure","preg"]},
+  {id:"straw",name:"Breathe through a thin straw",how:"Pinch your nose and breathe only through a thin coffee stirrer.",flags:["breath","heart","preg"]},
+  {id:"wstraw",name:"Breathe through a regular straw",how:"Pinch your nose and breathe only through a drinking straw. A gentler start.",flags:["breath"]},
+  {id:"hold",name:"Hold your breath",how:"Hold as long as you can, take a normal breath, then hold again until the minute ends.",flags:["breath","heart","preg"]},
+  {id:"chest",name:"Weight on your chest",how:"Lie down and rest a stack of heavy books on your upper chest.",flags:["breath","heart","preg"]},
+  {id:"heart",name:"Listen to a heartbeat",how:"Turn on the heartbeat sound and pay close attention to your own heart.",flags:[],media:"heart"}
+ ]},
+ {name:"Dizziness",about:"Dizzy, lightheaded, off-balance",items:[
+  {id:"spin",name:"Spin in a chair",how:"Spin in a swivel chair as fast as you can. Keep your eyes open.",flags:["neck","seizure","preg"]},
+  {id:"spinst",name:"Spin standing up",how:"Spin in place with space around you and a chair close by to sit in after.",flags:["neck","seizure","preg"]},
+  {id:"shake",name:"Shake your head",how:"Shake your head side to side, eyes open, then look straight ahead.",flags:["neck"]},
+  {id:"headdown",name:"Head down, sit up fast",how:"Sitting, put your head between your knees for 10 seconds, then sit up quickly. Repeat until the minute ends.",flags:["neck","heart","preg"]},
+  {id:"liedown",name:"Lie down, sit up fast",how:"Lie flat and relax, then sit up quickly. Repeat until the minute ends.",flags:["neck","heart","preg"]}
+ ]},
+ {name:"Shaking and weakness",about:"Trembling, shaky, weak",items:[
+  {id:"tense",name:"Tense every muscle",how:"Squeeze every muscle in your body as tight as you can, from your toes to your face.",flags:["heart"]},
+  {id:"plank",name:"Hold a push-up position",how:"Hold the top of a push-up (or on your knees) without dropping.",flags:["heart","preg"]}
+ ]},
+ {name:"Throat and swallowing",about:"Tight throat, lump in the throat, gagging, choking feelings",items:[
+  {id:"swallow",name:"Fast dry swallows",how:"Swallow over and over as fast as you can without water.",flags:[]},
+  {id:"tilt",name:"Swallow with your head tilted",how:"Tilt your head back and swallow, then tuck your chin and swallow. Keep switching.",flags:["neck"]},
+  {id:"tongue",name:"Tongue depressor",how:"Press a clean tongue depressor (or spoon) on the back of your tongue until you gag, then repeat.",flags:[]},
+  {id:"tightneck",name:"Wear something snug on your neck",how:"Wear a turtleneck or a scarf. It should feel snug but always fit two fingers underneath.",flags:[]},
+  {id:"cracker",name:"Dry cracker, no water",how:"Eat a dry cracker or bread without drinking anything.",flags:[]},
+  {id:"swfocus",name:"Pay attention to swallowing",how:"Focus only on your throat and every swallow. Don't try to stop noticing.",flags:[]}
+ ]},
+ {name:"Feeling unreal",about:"Spacey, unreal, far away, blurry",items:[
+  {id:"mirror",name:"Stare in a mirror",how:"Stare into your own eyes at arm's length without looking away.",flags:[]},
+  {id:"dot",name:"Stare at a dot",how:"Stare at a small dot on a blank wall without blinking as much as you can.",flags:[]},
+  {id:"spiral",name:"Stare at a spinning spiral",how:"Watch the center of the spiral on the screen. When it stops, look at your hand.",flags:["seizure"],media:"spiral"},
+  {id:"light",name:"Stare at a light, then read",how:"Stare at a ceiling light (not the sun). When the minute ends, read the paragraph shown out loud.",flags:["seizure"],media:"read"}
+ ]},
+ {name:"Heat and sweating",about:"Hot, flushed, sweaty",items:[
+  {id:"heat",name:"Sit by a heater",how:"Sit close to a space heater, or wear a warm jacket while drinking something hot.",flags:["heart","preg"]}
+ ]}
+];
+
+var ALL={};GROUPS.forEach(function(g){g.items.forEach(function(e){ALL[e.id]=e;});});
+
+var store={get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}},
+           set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+var log=store.get("ie_log",[]);
+var screen=store.get("ie_screen",[]);
+
+function $(id){return document.getElementById(id);}
+function el(tag,attrs,text){var n=document.createElement(tag);if(attrs)for(var k in attrs)n.setAttribute(k,attrs[k]);if(text!=null)n.textContent=text;return n;}
+
+/* theme */
+var themeBtn=$("themeBtn");
+function curTheme(){var t=document.documentElement.getAttribute("data-theme");if(t)return t;return matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}
+function paintTheme(){themeBtn.textContent=curTheme()==="dark"?"Light mode":"Dark mode";}
+var savedTheme=store.get("ie_theme",null);if(savedTheme)document.documentElement.setAttribute("data-theme",savedTheme);
+paintTheme();
+themeBtn.onclick=function(){var n=curTheme()==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",n);store.set("ie_theme",n);paintTheme();};
+
+/* render exercise list */
+function render(){
+  var host=$("groups");host.innerHTML="";
+  GROUPS.forEach(function(g){
+    var box=el("div",{class:"group"});
+    var head=el("div",{class:"group-head"});head.appendChild(el("h3",null,g.name));head.appendChild(el("p",{class:"muted"},g.about));
+    box.appendChild(head);
+    g.items.forEach(function(e){
+      var row=el("div",{class:"ex"});var left=el("div");
+      var h=el("h4",null,e.name);
+      var n=log.filter(function(r){return r.id===e.id;}).length;
+      if(n){h.appendChild(el("span",{class:"done"},n===1?"Done once":"Done "+n+" times"));}
+      left.appendChild(h);left.appendChild(el("p",{class:"how"},e.how));
+      var hit=e.flags.some(function(f){return screen.indexOf(f)>=0;});
+      var fl=el("span",{class:"flag"},"Check with your therapist first");if(!hit)fl.hidden=true;left.appendChild(fl);
+      var b=el("button",{class:"btn",type:"button"},"Start 1 minute");b.onclick=function(){open(e);};
+      row.appendChild(left);row.appendChild(b);box.appendChild(row);
+    });
+    host.appendChild(box);
+  });
+  renderLog();
+}
+
+/* screen */
+var boxes=document.querySelectorAll("#screen input");
+boxes.forEach(function(c){c.checked=screen.indexOf(c.value)>=0;c.onchange=function(){
+  screen=[].filter.call(boxes,function(x){return x.checked;}).map(function(x){return x.value;});
+  store.set("ie_screen",screen);$("screenNote").hidden=!screen.length;render();};});
+$("screenNote").hidden=!screen.length;
+
+/* scales */
+var vals={};
+function buildScale(node){
+  var key=node.getAttribute("data-key");var ends=(node.getAttribute("data-ends")||"None|Worst ever").split("|");
+  node.innerHTML="";var row=el("div",{class:"scale-row",role:"group"});
+  for(var i=0;i<=10;i++){(function(i){var b=el("button",{type:"button","aria-pressed":"false","aria-label":i+" out of 10"},String(i));
+    b.onclick=function(){vals[key]=i;[].forEach.call(row.children,function(c){c.setAttribute("aria-pressed","false");});b.setAttribute("aria-pressed","true");checkReady();};
+    row.appendChild(b);})(i);}
+  node.appendChild(row);var e=el("div",{class:"scale-ends"});e.appendChild(el("span",null,"0 "+ends[0]));e.appendChild(el("span",null,"10 "+ends[1]));node.appendChild(e);
+}
+var picked=[];
+function buildChips(){var c=$("chips");c.innerHTML="";picked=[];SENS.forEach(function(s){var b=el("button",{type:"button","aria-pressed":"false"},s);
+  b.onclick=function(){var on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",String(on));if(on)picked.push(s);else picked=picked.filter(function(x){return x!==s;});};c.appendChild(b);});}
+function checkReady(){$("goBtn").disabled=vals.before==null;var ok=vals.peak!=null&&vals.similar!=null;$("saveBtn").disabled=!ok;$("againBtn").disabled=!ok;}
+
+/* timer + media */
+var DUR=60,cur=null,left=DUR,tick=null,paused=false,startedAt=0,stoppedEarly=false;
+var CUES=[[60,"Bring the feelings on as strong as you can."],[45,"Keep going. Notice where you feel it."],[30,"Halfway. No distracting yourself."],[15,"Stay with it. It's uncomfortable, not dangerous."],[5,"Almost there."]];
+var ctx=null;function audio(){if(!ctx){try{ctx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}return ctx;}
+function tone(f,d,v,t0){var a=audio();if(!a)return;var o=a.createOscillator(),g=a.createGain();o.frequency.value=f;o.type="sine";var t=a.currentTime+(t0||0);
+  g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(v,t+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+0.05);}
+function chime(){tone(660,.5,.25);tone(880,.7,.2,.18);}
+var beat=null,heartOn=false;
+function startHeart(){stopHeart();beat=setInterval(function(){tone(55,.18,.9);tone(48,.2,.7,.22);},700);tone(55,.18,.9);tone(48,.2,.7,.22);}
+function stopHeart(){if(beat){clearInterval(beat);beat=null;}}
+
+var spinRaf=null;
+function startSpiral(){var c=$("spiral");c.hidden=false;var g=c.getContext("2d");var ang=0;
+  function draw(){var w=c.clientWidth,h=c.clientHeight;if(c.width!==w*2){c.width=w*2;c.height=h*2;}
+    g.setTransform(2,0,0,2,0,0);g.clearRect(0,0,w,h);var cx=w/2,cy=h/2,R=Math.hypot(w,h)/2;
+    g.save();g.translate(cx,cy);g.rotate(ang);g.lineWidth=10;g.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue("--ink");
+    g.beginPath();for(var t=0;t<R/3;t+=0.05){var r=3*t;var x=r*Math.cos(t),y=r*Math.sin(t);if(t===0)g.moveTo(x,y);else g.lineTo(x,y);}g.stroke();g.restore();
+    if(!paused)ang+=0.06;spinRaf=requestAnimationFrame(draw);}
+  draw();}
+function stopSpiral(){if(spinRaf)cancelAnimationFrame(spinRaf);spinRaf=null;$("spiral").hidden=true;}
+
+function show(st){["stBefore","stRun","stAfter"].forEach(function(s){$(s).hidden=s!==st;});}
+function open(e){
+  cur=e;vals={};$("predict").value="";$("happened").value="";
+  $("dlgTitle").textContent=e.name;$("dlgHow").textContent=e.how||"";
+  document.querySelectorAll("#dlg .scale").forEach(buildScale);buildChips();checkReady();
+  show("stBefore");$("dlg").showModal();
+}
+function runTimer(){
+  audio();left=DUR;paused=false;stoppedEarly=false;startedAt=Date.now();
+  show("stRun");$("tank").classList.remove("full");$("water").style.transform="translateY(100%)";
+  $("pauseBtn").textContent="Pause";
+  $("heartBtn").hidden=cur.media!=="heart";heartOn=false;$("heartBtn").textContent="Turn heartbeat sound on";
+  if(cur.media==="heart"){heartOn=true;startHeart();$("heartBtn").textContent="Turn heartbeat sound off";}
+  if(cur.media==="spiral")startSpiral();
+  paint();clearInterval(tick);tick=setInterval(function(){if(paused)return;left--;paint();if(left<=0)finish();},1000);
+}
+function paint(){
+  $("secs").textContent=left;
+  var p=(DUR-left)/DUR;$("water").style.transform="translateY("+(100-p*100)+"%)";
+  if(p>.55)$("tank").classList.add("full");
+  for(var i=CUES.length-1;i>=0;i--){if(left<=CUES[i][0]){$("cue").textContent=CUES[i][1];break;}}
+  if(cur.media==="spiral"&&left>0)$("cue").textContent="Keep your eyes on the center.";
+}
+function finish(){clearInterval(tick);tick=null;stopHeart();stopSpiral();chime();
+  show("stAfter");
+  $("afterMsg").textContent=stoppedEarly?"You stopped after "+(DUR-left)+" seconds. That's okay. Next time try to stay a little longer.":"You did the full minute. Now notice what's happening in your body.";
+  $("reading").hidden=cur.media!=="read";
+  if(cur.media==="spiral")$("afterMsg").textContent+=" Look at your hand for a moment.";
+}
+$("goBtn").onclick=runTimer;
+$("pauseBtn").onclick=function(){paused=!paused;this.textContent=paused?"Keep going":"Pause";if(cur.media==="heart"){if(paused)stopHeart();else if(heartOn)startHeart();}};
+$("stopBtn").onclick=function(){stoppedEarly=true;finish();};
+$("heartBtn").onclick=function(){heartOn=!heartOn;if(heartOn)startHeart();else stopHeart();this.textContent=heartOn?"Turn heartbeat sound off":"Turn heartbeat sound on";};
+function closeDlg(){clearInterval(tick);tick=null;stopHeart();stopSpiral();if($("dlg").open)$("dlg").close();}
+$("dlgClose").onclick=closeDlg;$("dlg").addEventListener("cancel",function(){clearInterval(tick);stopHeart();stopSpiral();});
+
+function save(){
+  log.push({id:cur.id,name:cur.name,when:new Date().toISOString(),secs:DUR-left,before:vals.before,intensity:vals.intensity,peak:vals.peak,after:vals.after,similar:vals.similar,felt:picked.slice(),predict:$("predict").value.trim(),happened:$("happened").value.trim()});
+  store.set("ie_log",log);render();
+}
+$("saveBtn").onclick=function(){save();closeDlg();};
+$("againBtn").onclick=function(){save();var e=cur;open(e);};
+
+$("customStart").onclick=function(){var n=$("customName").value.trim();if(!n){$("customName").focus();$("customName").placeholder="Type a name for your exercise first";return;}
+  var id="c_"+n.toLowerCase().replace(/[^a-z0-9]+/g,"-");open({id:id,name:n,how:$("customHow").value.trim(),flags:[]});};
+
+/* log + plan */
+function fmt(iso){var d=new Date(iso);return d.toLocaleDateString(undefined,{month:"short",day:"numeric"})+" "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});}
+function dash(v){return v==null?"–":String(v);}
+function renderLog(){
+  var tb=$("logBody");tb.innerHTML="";$("logEmpty").hidden=log.length>0;
+  log.slice().reverse().forEach(function(r){var tr=el("tr");
+    tr.appendChild(el("td",null,fmt(r.when)));
+    tr.appendChild(el("td",null,r.name+(r.secs<DUR?" ("+r.secs+"s)":"")));
+    ["before","peak","after","similar"].forEach(function(k){tr.appendChild(el("td",{class:"num"},dash(r[k])));});
+    tr.appendChild(el("td",null,r.felt.join(", ")||"–"));
+    var pt=el("td");if(r.predict){pt.appendChild(el("div",null,"Predicted: "+r.predict));}if(r.happened){pt.appendChild(el("div",null,"Happened: "+r.happened));}if(!r.predict&&!r.happened)pt.textContent="–";
+    tr.appendChild(pt);tb.appendChild(tr);});
+  // plan: per exercise, latest trial's values; include if max similarity >=3
+  var by={};log.forEach(function(r){var b=by[r.id]||(by[r.id]={name:r.name,maxSim:0,peaks:[],n:0});b.n++;b.maxSim=Math.max(b.maxSim,r.similar||0);b.peaks.push(r.peak);});
+  var items=Object.keys(by).map(function(k){var b=by[k];return {name:b.name,sim:b.maxSim,first:b.peaks[0],last:b.peaks[b.peaks.length-1],n:b.n};})
+    .filter(function(x){return x.sim>=3;}).sort(function(a,b){return a.last-b.last||b.sim-a.sim;});
+  var pl=$("plan");pl.innerHTML="";$("planEmpty").hidden=items.length>0;
+  items.forEach(function(x){var li=el("li");li.appendChild(el("span",null,x.name));
+    var m=x.n>1?"Fear "+x.first+" → "+x.last+", similar "+x.sim:"Fear "+x.last+", similar "+x.sim;
+    if(x.n>1&&x.first>0&&x.last<=x.first/2)m+=", down by half";
+    li.appendChild(el("span",{class:"meta"},m));pl.appendChild(li);});
+}
+
+$("printBtn").onclick=function(){var n=$("clientName").value.trim();$("printMeta").textContent=(n?n+", ":"")+"printed "+new Date().toLocaleDateString();window.print();};
+$("csvBtn").onclick=function(){
+  if(!log.length)return;
+  var head=["date","exercise","seconds","anxiety_before","intensity","anxiety_peak","anxiety_after","similarity","sensations","predicted","happened"];
+  var q=function(v){v=v==null?"":String(v);return '"'+v.replace(/"/g,'""')+'"';};
+  var rows=[head.join(",")].concat(log.map(function(r){return [r.when,r.name,r.secs,r.before,r.intensity,r.peak,r.after,r.similar,r.felt.join("; "),r.predict,r.happened].map(q).join(",");}));
+  var blob=new Blob([rows.join("\n")],{type:"text/csv"});var a=el("a",{href:URL.createObjectURL(blob),download:"interoceptive-practice.csv"});document.body.appendChild(a);a.click();a.remove();
+};
+$("clearBtn").onclick=function(){if(!log.length)return;if(confirm("Clear all practice from this device? This can't be undone.")){log=[];store.set("ie_log",log);render();}};
+
+render();
+})();
+</script>
+</body>
+</html>
